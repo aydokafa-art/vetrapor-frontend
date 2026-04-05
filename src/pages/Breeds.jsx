@@ -55,9 +55,11 @@ export default function Breeds() {
         Tüm {label} Vakalarını Gör →
       </button>
 
-      <p style={{ fontSize: '0.8rem', color: '#a0aec0', marginBottom: '1rem', fontStyle: 'italic' }}>
-        * Görseller yalnızca temsilidir; fotoğraflardaki hayvanlar epikrizlerdeki hastalarla eşleşmemektedir.
-      </p>
+      {animalType === 'kopek' && (
+        <p style={{ fontSize: '0.8rem', color: '#a0aec0', marginBottom: '1rem', fontStyle: 'italic' }}>
+          * Görseller yalnızca temsilidir; fotoğraflardaki hayvanlar epikrizlerdeki hastalarla eşleşmemektedir.
+        </p>
+      )}
 
       {loading && <p style={{ color: '#718096' }}>Yükleniyor...</p>}
       {!loading && breeds.length === 0 && <div style={styles.empty}><p>Henüz bu türe ait vaka bulunmuyor.</p></div>}
@@ -66,18 +68,24 @@ export default function Breeds() {
         {breeds.map(breed => (
           <div
             key={breed}
-            style={styles.card}
+            style={animalType === 'kopek' ? styles.card : styles.cardText}
             onClick={() => navigate(`/${animalType}/${encodeURIComponent(breed)}`)}
           >
-            <img
-              src={getImage(animalType, breed)}
-              alt={breed}
-              style={styles.img}
-              onError={e => { e.target.src = `https://picsum.photos/seed/${getHash(breed)}/400/260` }}
-            />
-            <div style={styles.overlay}>
-              <span style={styles.breedName}>{cleanBreed(breed)}</span>
-            </div>
+            {animalType === 'kopek' ? (
+              <>
+                <img
+                  src={getImage(animalType, breed)}
+                  alt={breed}
+                  style={styles.img}
+                  onError={e => { e.target.src = `https://placedog.net/400/260?id=${(getHash(breed) % 50) + 1}` }}
+                />
+                <div style={styles.overlay}>
+                  <span style={styles.breedName}>{cleanBreed(breed)}</span>
+                </div>
+              </>
+            ) : (
+              <span style={styles.breedNamePlain}>{cleanBreed(breed)}</span>
+            )}
           </div>
         ))}
       </div>
@@ -90,6 +98,19 @@ const styles = {
   back: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#94a3b8', marginBottom: '1rem', padding: 0 },
   title: { fontSize: '1.8rem', color: 'white', marginBottom: '2rem' },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' },
+  cardText: {
+    borderRadius: '0.875rem',
+    background: 'rgba(255,255,255,0.08)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    cursor: 'pointer',
+    padding: '1.25rem 1rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '80px',
+    transition: 'background 0.2s',
+  },
+  breedNamePlain: { color: 'white', fontWeight: 600, fontSize: '0.95rem', textAlign: 'center' },
   card: {
     borderRadius: '0.875rem',
     overflow: 'hidden',

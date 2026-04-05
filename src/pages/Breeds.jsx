@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 
+const API = import.meta.env.VITE_API_URL || ''
+
 export default function Breeds() {
   const { animalType } = useParams()
   const navigate = useNavigate()
@@ -12,7 +14,7 @@ export default function Breeds() {
   const emoji = animalType === 'kedi' ? '🐱' : animalType === 'kus' ? '🦎' : '🐶'
 
   useEffect(() => {
-    axios.get(`/api/cases/breeds/${animalType}`)
+    axios.get(`${API}/api/cases/breeds/${animalType}`)
       .then(r => setBreeds(r.data))
       .catch(() => setBreeds([]))
       .finally(() => setLoading(false))

@@ -429,7 +429,7 @@ const s = {
   page: { minHeight: '100vh', background: 'linear-gradient(160deg, #0f2d3a 0%, #0d2035 50%, #0a1628 100%)', fontFamily: 'sans-serif', padding: '2rem 1rem' },
   header: { textAlign: 'center', marginBottom: '2rem' },
   backBtn: { background: 'none', border: 'none', color: '#4f46e5', cursor: 'pointer', fontSize: '0.95rem', marginBottom: '0.5rem' },
-  title: { fontSize: '2rem', color: '#1a202c', margin: '0 0 0.25rem' },
+  title: { fontSize: '2rem', color: 'white', margin: '0 0 0.25rem' },
   sub: { color: '#718096', margin: 0 },
   card: { maxWidth: 700, margin: '0 auto', background: 'white', borderRadius: '1rem', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' },
 

@@ -11,7 +11,16 @@ export default function Breeds() {
   const [loading, setLoading] = useState(true)
 
   const label = animalType === 'kedi' ? '🐱 Kedi' : animalType === 'kus' ? '🦎 Egzotik' : '🐶 Köpek'
-  const emoji = animalType === 'kedi' ? '🐱' : animalType === 'kus' ? '🦎' : '🐶'
+
+  const kediEmojis = ['🐱', '😺', '😸', '😻', '😼', '🐈', '😹', '🙀', '😽', '🐈‍⬛']
+  const kopekEmojis = ['🐶', '🐕', '🦮', '🐩', '🐕‍🦺', '🦴', '🐾', '🐕', '🐶', '🦮']
+  const kusEmojis = ['🦎', '🐢', '🦜', '🐦', '🦚', '🦩', '🐠', '🦋', '🐇', '🦔']
+
+  const getEmoji = (breed) => {
+    const list = animalType === 'kedi' ? kediEmojis : animalType === 'kus' ? kusEmojis : kopekEmojis
+    const hash = [...breed].reduce((acc, c) => acc + c.charCodeAt(0), 0)
+    return list[hash % list.length]
+  }
 
   useEffect(() => {
     axios.get(`${API}/api/cases/breeds/${animalType}`)
@@ -50,7 +59,7 @@ export default function Breeds() {
             style={styles.card}
             onClick={() => navigate(`/${animalType}/${encodeURIComponent(breed)}`)}
           >
-            <span style={styles.icon}>{emoji}</span>
+            <span style={styles.icon}>{getEmoji(breed)}</span>
             <h3 style={styles.breedName}>{breed}</h3>
           </div>
         ))}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-const API = ''
+const API = import.meta.env.VITE_API_URL || ''
 
 export default function MakaleAra() {
   const navigate = useNavigate()

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 
-const API = ''
+const API = import.meta.env.VITE_API_URL || ''
 
 const TAG_LABELS = { TANI: '🔎 Tanıya Giden Yol', DDX: '🔀 Ayırıcı Tanılar', LAB: '🧪 Lab Yorumu', TAKİP: '📌 Takip' }
 

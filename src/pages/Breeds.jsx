@@ -4,6 +4,17 @@ import axios from 'axios'
 
 const API = import.meta.env.VITE_API_URL || ''
 
+const getHash = (str) => [...str].reduce((acc, c) => acc + c.charCodeAt(0), 0)
+
+const getImage = (animalType, breed) => {
+  const hash = getHash(breed)
+  if (animalType === 'kedi') return `https://cataas.com/cat?seed=${hash}&width=300&height=180`
+  if (animalType === 'kopek') return `https://placedog.net/300/180?id=${(hash % 50) + 1}`
+  // Egzotik için picsum (doğa/hayvan temalı)
+  const exoticSeeds = ['gecko','parrot','turtle','rabbit','hamster','iguana','chameleon','ferret','hedgehog','bird']
+  return `https://source.unsplash.com/300x180/?${exoticSeeds[hash % exoticSeeds.length]}`
+}
+
 export default function Breeds() {
   const { animalType } = useParams()
   const navigate = useNavigate()
@@ -11,16 +22,6 @@ export default function Breeds() {
   const [loading, setLoading] = useState(true)
 
   const label = animalType === 'kedi' ? '🐱 Kedi' : animalType === 'kus' ? '🦎 Egzotik' : '🐶 Köpek'
-
-  const kediEmojis = ['🐱', '😺', '😸', '😻', '😼', '🐈', '😹', '🙀', '😽', '🐈‍⬛']
-  const kopekEmojis = ['🐶', '🐕', '🦮', '🐩', '🐕‍🦺', '🦴', '🐾', '🐕', '🐶', '🦮']
-  const kusEmojis = ['🦎', '🐢', '🦜', '🐦', '🦚', '🦩', '🐠', '🦋', '🐇', '🦔']
-
-  const getEmoji = (breed) => {
-    const list = animalType === 'kedi' ? kediEmojis : animalType === 'kus' ? kusEmojis : kopekEmojis
-    const hash = [...breed].reduce((acc, c) => acc + c.charCodeAt(0), 0)
-    return list[hash % list.length]
-  }
 
   useEffect(() => {
     axios.get(`${API}/api/cases/breeds/${animalType}`)
@@ -46,9 +47,6 @@ export default function Breeds() {
       {!loading && breeds.length === 0 && (
         <div style={styles.empty}>
           <p>Henüz bu türe ait vaka bulunmuyor.</p>
-          <button style={styles.adminBtn} onClick={() => navigate('/admin')}>
-            Rapor Ekle
-          </button>
         </div>
       )}
 
@@ -59,7 +57,14 @@ export default function Breeds() {
             style={styles.card}
             onClick={() => navigate(`/${animalType}/${encodeURIComponent(breed)}`)}
           >
-            <span style={styles.icon}>{getEmoji(breed)}</span>
+            <div style={styles.imgWrapper}>
+              <img
+                src={getImage(animalType, breed)}
+                alt={breed}
+                style={styles.img}
+                onError={e => { e.target.style.display = 'none' }}
+              />
+            </div>
             <h3 style={styles.breedName}>{breed}</h3>
           </div>
         ))}
@@ -91,31 +96,32 @@ const styles = {
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-    gap: '1rem',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+    gap: '1.25rem',
   },
   card: {
     background: 'white',
-    borderRadius: '0.75rem',
-    padding: '1.5rem',
+    borderRadius: '0.875rem',
+    overflow: 'hidden',
     cursor: 'pointer',
     textAlign: 'center',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
-    transition: 'transform 0.2s',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+    transition: 'transform 0.2s, box-shadow 0.2s',
   },
-  icon: { fontSize: '2rem', display: 'block', marginBottom: '0.5rem' },
-  breedName: { margin: 0, color: '#2d3748', fontSize: '1rem' },
+  imgWrapper: {
+    width: '100%',
+    height: '160px',
+    overflow: 'hidden',
+    background: '#f0f4f8',
+  },
+  img: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+  },
+  breedName: { margin: 0, color: '#2d3748', fontSize: '1rem', padding: '0.9rem 0.75rem' },
   empty: { textAlign: 'center', color: '#718096', marginTop: '4rem' },
-  adminBtn: {
-    marginTop: '1rem',
-    padding: '0.6rem 1.5rem',
-    background: '#4299e1',
-    color: 'white',
-    border: 'none',
-    borderRadius: '0.5rem',
-    cursor: 'pointer',
-    fontSize: '1rem',
-  },
   allCasesBtn: {
     display: 'inline-block',
     marginBottom: '1.5rem',

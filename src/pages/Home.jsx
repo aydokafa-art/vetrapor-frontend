@@ -5,6 +5,20 @@ export default function Home() {
 
   return (
     <div style={s.container}>
+      <div style={s.pawBg} aria-hidden="true">
+        {Array.from({ length: 18 }).map((_, i) => (
+          <span key={i} style={{
+            position: 'absolute',
+            fontSize: `${1.2 + (i % 3) * 0.6}rem`,
+            opacity: 0.06 + (i % 4) * 0.02,
+            top: `${(i * 19 + 7) % 95}%`,
+            left: `${(i * 23 + 5) % 92}%`,
+            transform: `rotate(${(i * 37) % 360}deg)`,
+            userSelect: 'none',
+            pointerEvents: 'none',
+          }}>🐾</span>
+        ))}
+      </div>
       <div style={s.inner}>
         <h1 style={s.title}>Veteriner Epidemik Rapor Sistemi</h1>
         <p style={s.subtitle}>Tanı desteği, epidemik raporlama ve klinik hesaplayıcılar{'\n'}tek çatı altında, hızlı ve güvenilir.</p>
@@ -68,16 +82,25 @@ export default function Home() {
 const s = {
   container: {
     minHeight: '100vh',
-    background: 'linear-gradient(160deg, #1e3a4f 0%, #1a2f42 50%, #162538 100%)',
+    background: 'linear-gradient(180deg, #0d2b1a 0%, #0f2d2a 30%, #0f2340 65%, #0d1b3e 100%)',
+    position: 'relative',
+    overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontFamily: 'sans-serif',
     padding: '2rem 1rem',
   },
+  pawBg: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+  },
   inner: {
     width: '100%',
     maxWidth: 480,
+    position: 'relative',
+    zIndex: 1,
   },
   title: {
     color: 'white',

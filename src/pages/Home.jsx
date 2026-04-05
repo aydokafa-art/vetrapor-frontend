@@ -10,15 +10,15 @@ export default function Home() {
       <h1 style={styles.title}>Veteriner Epidemik Rapor Sistemi</h1>
       <p style={styles.subtitle}>Hangi hayvan türünü incelemek istiyorsunuz?</p>
       <div style={styles.cards}>
-        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}) }} onClick={() => navigate('/kedi')}>
+        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}), background: '#fffbeb', border: '2px solid #fde68a' }} onClick={() => navigate('/kedi')}>
           <span style={styles.emoji}>🐱</span>
           <h2 style={{ color: '#d97706' }}>Kedi</h2>
         </div>
-        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}) }} onClick={() => navigate('/kopek')}>
+        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}), background: '#eff6ff', border: '2px solid #bfdbfe' }} onClick={() => navigate('/kopek')}>
           <span style={styles.emoji}>🐶</span>
           <h2 style={{ color: '#2563eb' }}>Köpek</h2>
         </div>
-        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}) }} onClick={() => navigate('/kus')}>
+        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}), background: '#f0fdf4', border: '2px solid #bbf7d0' }} onClick={() => navigate('/kus')}>
           <span style={styles.emoji}>🦎</span>
           <h2 style={{ color: '#16a34a' }}>Egzotik</h2>
         </div>
@@ -34,9 +34,6 @@ export default function Home() {
       </button>
       <button style={styles.makaleBtn} onClick={() => navigate('/makale-ara')}>
         📚 Makale Ara
-      </button>
-      <button style={styles.adminBtn} onClick={() => navigate('/admin')}>
-        Admin Paneli
       </button>
     </div>
   )

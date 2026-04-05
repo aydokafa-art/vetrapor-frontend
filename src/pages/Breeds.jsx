@@ -8,7 +8,7 @@ const getHash = (str) => [...str].reduce((acc, c) => acc + c.charCodeAt(0), 0)
 
 const getImage = (animalType, breed) => {
   const h = getHash(breed)
-  if (animalType === 'kedi') return `https://cataas.com/cat?seed=${(h % 100) + 1}&width=400&height=260`
+  if (animalType === 'kedi') return `https://cataas.com/cat/cute?seed=${(h % 60) + 1}&width=400&height=260`
   if (animalType === 'kopek') return `https://placedog.net/400/260?id=${(h % 50) + 1}`
   const seeds = ['gecko','parrot','rabbit','iguana','chameleon','hedgehog','hamster','turtle','bird','ferret']
   return `https://loremflickr.com/400/260/${seeds[h % seeds.length]},cute?random=${h % 30}`

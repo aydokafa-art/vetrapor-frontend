@@ -1,148 +1,168 @@
 import { useNavigate } from 'react-router-dom'
-import useMobile from '../useMobile'
 
 export default function Home() {
   const navigate = useNavigate()
-  const isMobile = useMobile()
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>Veteriner Epidemik Rapor Sistemi</h1>
-      <p style={styles.subtitle}>Hangi hayvan türünü incelemek istiyorsunuz?</p>
-      <div style={styles.cards}>
-        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}), background: '#fffbeb', border: '2px solid #fde68a' }} onClick={() => navigate('/kedi')}>
-          <span style={styles.emoji}>🐱</span>
-          <h2 style={{ color: '#d97706' }}>Kedi</h2>
+    <div style={s.container}>
+      <div style={s.inner}>
+        <h1 style={s.title}>Veteriner Epidemik Rapor Sistemi</h1>
+        <p style={s.subtitle}>Tanı desteği, epidemik raporlama ve klinik hesaplayıcılar{'\n'}tek çatı altında, hızlı ve güvenilir.</p>
+
+        <div style={s.sectionLabel}>HAYVAN TÜRÜ</div>
+        <div style={s.animalRow}>
+          <div style={{ ...s.animalCard, borderColor: '#fbbf24' }} onClick={() => navigate('/kedi')}>
+            <span style={s.animalEmoji}>🐱</span>
+            <span style={{ ...s.animalName, color: '#d97706' }}>Kedi</span>
+          </div>
+          <div style={{ ...s.animalCard, borderColor: '#93c5fd' }} onClick={() => navigate('/kopek')}>
+            <span style={s.animalEmoji}>🐶</span>
+            <span style={{ ...s.animalName, color: '#2563eb' }}>Köpek</span>
+          </div>
+          <div style={{ ...s.animalCard, borderColor: '#86efac' }} onClick={() => navigate('/kus')}>
+            <span style={s.animalEmoji}>🦎</span>
+            <span style={{ ...s.animalName, color: '#16a34a' }}>Egzotik</span>
+          </div>
         </div>
-        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}), background: '#eff6ff', border: '2px solid #bfdbfe' }} onClick={() => navigate('/kopek')}>
-          <span style={styles.emoji}>🐶</span>
-          <h2 style={{ color: '#2563eb' }}>Köpek</h2>
+
+        <div style={s.divider} />
+
+        <div style={s.sectionLabel}>ARAÇLAR</div>
+        <div style={s.toolList}>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #4f46e5, #6366f1)' }} onClick={() => navigate('/vaka-bul')}>
+            <div style={s.toolIcon}>🔍</div>
+            <div>
+              <div style={s.toolTitle}>Vaka Bul</div>
+              <div style={s.toolDesc}>Semptoma göre vaka ara</div>
+            </div>
+          </div>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #0891b2, #06b6d4)' }} onClick={() => navigate('/sivi-hesap')}>
+            <div style={s.toolIcon}>💧</div>
+            <div>
+              <div style={s.toolTitle}>Sıvı Hesap</div>
+              <div style={s.toolDesc}>İV sıvı miktarı hesapla</div>
+            </div>
+          </div>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }} onClick={() => navigate('/doz-hesap')}>
+            <div style={s.toolIcon}>💉</div>
+            <div>
+              <div style={s.toolTitle}>Doz Hesap</div>
+              <div style={s.toolDesc}>İlaç dozunu hesapla</div>
+            </div>
+          </div>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #16a34a, #22c55e)' }} onClick={() => navigate('/makale-ara')}>
+            <div style={s.toolIcon}>📚</div>
+            <div>
+              <div style={s.toolTitle}>Makale Ara</div>
+              <div style={s.toolDesc}>Veteriner literatürü</div>
+            </div>
+          </div>
         </div>
-        <div style={{ ...styles.card, ...(isMobile ? styles.cardMobile : {}), background: '#f0fdf4', border: '2px solid #bbf7d0' }} onClick={() => navigate('/kus')}>
-          <span style={styles.emoji}>🦎</span>
-          <h2 style={{ color: '#16a34a' }}>Egzotik</h2>
-        </div>
+
+        <button style={s.adminBtn} onClick={() => navigate('/admin')}>⚙ Admin Paneli</button>
       </div>
-      <button style={styles.vakaBulBtn} onClick={() => navigate('/vaka-bul')}>
-        🔍 Vaka Bul
-      </button>
-      <button style={styles.fluidBtn} onClick={() => navigate('/sivi-hesap')}>
-        💧 Sıvı Hesaplayıcı
-      </button>
-      <button style={styles.dozBtn} onClick={() => navigate('/doz-hesap')}>
-        💉 Doz Hesaplayıcı
-      </button>
-      <button style={styles.makaleBtn} onClick={() => navigate('/makale-ara')}>
-        📚 Makale Ara
-      </button>
     </div>
   )
 }
 
-const styles = {
+const s = {
   container: {
     minHeight: '100vh',
+    background: 'linear-gradient(160deg, #1e2d3d 0%, #1a2332 60%, #0f172a 100%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: 'sans-serif',
+    padding: '2rem 1rem',
+  },
+  inner: {
+    width: '100%',
+    maxWidth: 480,
+  },
+  title: {
+    color: 'white',
+    fontSize: '1.4rem',
+    fontWeight: 700,
+    textAlign: 'center',
+    marginBottom: '0.5rem',
+  },
+  subtitle: {
+    color: '#94a3b8',
+    fontSize: '0.9rem',
+    textAlign: 'center',
+    lineHeight: 1.6,
+    marginBottom: '2rem',
+    whiteSpace: 'pre-line',
+  },
+  sectionLabel: {
+    color: '#64748b',
+    fontSize: '0.72rem',
+    fontWeight: 700,
+    letterSpacing: '0.1em',
+    marginBottom: '0.75rem',
+  },
+  animalRow: {
+    display: 'flex',
+    gap: '0.75rem',
+    marginBottom: '1.5rem',
+  },
+  animalCard: {
+    flex: 1,
+    background: 'rgba(255,255,255,0.07)',
+    border: '2px solid',
+    borderRadius: '1rem',
+    padding: '1.25rem 0.5rem',
+    cursor: 'pointer',
+    textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    background: '#f0f4f8',
-    fontFamily: 'sans-serif',
-    padding: '2rem',
+    gap: '0.4rem',
+    transition: 'transform 0.15s',
   },
-  title: {
-    fontSize: '2rem',
-    color: '#1a202c',
-    marginBottom: '0.5rem',
-    textAlign: 'center',
+  animalEmoji: { fontSize: '2.2rem' },
+  animalName: { fontWeight: 700, fontSize: '1rem' },
+  divider: {
+    borderTop: '1px solid rgba(255,255,255,0.08)',
+    marginBottom: '1.5rem',
   },
-  subtitle: {
-    color: '#4a5568',
-    marginBottom: '3rem',
-    fontSize: '1.1rem',
-  },
-  cards: {
+  toolList: {
     display: 'flex',
-    gap: '2rem',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    marginBottom: '1.5rem',
   },
-  card: {
-    background: 'white',
+  toolBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    padding: '1rem 1.25rem',
     borderRadius: '1rem',
-    padding: '3rem 4rem',
     cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    border: '2px solid transparent',
-  },
-  cardMobile: {
-    padding: '1.5rem 2rem',
-    flex: '1 1 calc(33% - 1rem)',
-    minWidth: '90px',
-  },
-  emoji: {
-    fontSize: '4rem',
-    display: 'block',
-    marginBottom: '1rem',
-  },
-  vakaBulBtn: {
-    marginTop: '3rem',
-    padding: '0.85rem 2.5rem',
-    background: '#4f46e5',
     border: 'none',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
     color: 'white',
-    fontSize: '1.1rem',
-    fontWeight: 700,
-    boxShadow: '0 4px 12px rgba(79,70,229,0.3)',
   },
-  fluidBtn: {
-    marginTop: '0.75rem',
-    padding: '0.85rem 2.5rem',
-    background: '#0987a0',
-    border: 'none',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
-    color: 'white',
-    fontSize: '1.1rem',
-    fontWeight: 700,
-    boxShadow: '0 4px 12px rgba(9,135,160,0.3)',
+  toolIcon: {
+    fontSize: '1.6rem',
+    background: 'rgba(255,255,255,0.15)',
+    borderRadius: '0.6rem',
+    width: '2.8rem',
+    height: '2.8rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
   },
-  dozBtn: {
-    marginTop: '0.75rem',
-    padding: '0.85rem 2.5rem',
-    background: '#6b46c1',
-    border: 'none',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
-    color: 'white',
-    fontSize: '1.1rem',
-    fontWeight: 700,
-    boxShadow: '0 4px 12px rgba(107,70,193,0.3)',
-  },
-  makaleBtn: {
-    marginTop: '0.75rem',
-    padding: '0.85rem 2.5rem',
-    background: '#38a169',
-    border: 'none',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
-    color: 'white',
-    fontSize: '1.1rem',
-    fontWeight: 700,
-    boxShadow: '0 4px 12px rgba(56,161,105,0.3)',
-  },
+  toolTitle: { fontWeight: 700, fontSize: '1rem', color: 'white' },
+  toolDesc: { fontSize: '0.82rem', color: 'rgba(255,255,255,0.75)', marginTop: '0.1rem' },
   adminBtn: {
-    marginTop: '1rem',
-    padding: '0.6rem 1.5rem',
-    background: 'transparent',
-    border: '1px solid #cbd5e0',
-    borderRadius: '0.5rem',
+    background: 'rgba(255,255,255,0.07)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '0.75rem',
+    color: '#94a3b8',
     cursor: 'pointer',
-    color: '#718096',
-    fontSize: '0.9rem',
-  }
+    fontSize: '0.85rem',
+    padding: '0.6rem 1.25rem',
+    width: '100%',
+  },
 }

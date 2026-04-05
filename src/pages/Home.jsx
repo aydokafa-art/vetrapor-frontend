@@ -68,7 +68,7 @@ export default function Home() {
 const s = {
   container: {
     minHeight: '100vh',
-    background: 'linear-gradient(160deg, #1e2d3d 0%, #1a2332 60%, #0f172a 100%)',
+    background: 'linear-gradient(160deg, #1e3a4f 0%, #1a2f42 50%, #162538 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

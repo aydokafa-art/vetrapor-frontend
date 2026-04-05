@@ -8,10 +8,10 @@ const getHash = (str) => [...str].reduce((acc, c) => acc + c.charCodeAt(0), 0)
 
 const getImage = (animalType, breed) => {
   const h = getHash(breed)
-  if (animalType === 'kedi') return `https://cataas.com/cat?seed=${h}&width=400&height=260`
+  if (animalType === 'kedi') return `https://loremflickr.com/400/260/cat,kitten,cute?random=${(h % 80) + 1}`
   if (animalType === 'kopek') return `https://placedog.net/400/260?id=${(h % 50) + 1}`
   const seeds = ['gecko','parrot','rabbit','iguana','chameleon','hedgehog','hamster','turtle','bird','ferret']
-  return `https://picsum.photos/seed/${seeds[h % seeds.length]}/400/260`
+  return `https://loremflickr.com/400/260/${seeds[h % seeds.length]}?random=${h % 30}`
 }
 
 const cleanBreed = (name) => {
@@ -54,6 +54,10 @@ export default function Breeds() {
       <button style={styles.allCasesBtn} onClick={() => navigate(`/${animalType}/tum-vakalar`)}>
         Tüm {label} Vakalarını Gör →
       </button>
+
+      <p style={{ fontSize: '0.8rem', color: '#a0aec0', marginBottom: '1rem', fontStyle: 'italic' }}>
+        * Görseller yalnızca temsilidir; fotoğraflardaki hayvanlar epikrizlerdeki hastalarla eşleşmemektedir.
+      </p>
 
       {loading && <p style={{ color: '#718096' }}>Yükleniyor...</p>}
       {!loading && breeds.length === 0 && <div style={styles.empty}><p>Henüz bu türe ait vaka bulunmuyor.</p></div>}

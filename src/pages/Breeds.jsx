@@ -8,10 +8,10 @@ const getHash = (str) => [...str].reduce((acc, c) => acc + c.charCodeAt(0), 0)
 
 const getImage = (animalType, breed) => {
   const h = getHash(breed)
-  if (animalType === 'kedi') return `https://loremflickr.com/400/260/cat,kitten,cute?random=${(h % 80) + 1}`
+  if (animalType === 'kedi') return `https://cataas.com/cat?seed=${(h % 100) + 1}&width=400&height=260`
   if (animalType === 'kopek') return `https://placedog.net/400/260?id=${(h % 50) + 1}`
   const seeds = ['gecko','parrot','rabbit','iguana','chameleon','hedgehog','hamster','turtle','bird','ferret']
-  return `https://loremflickr.com/400/260/${seeds[h % seeds.length]}?random=${h % 30}`
+  return `https://loremflickr.com/400/260/${seeds[h % seeds.length]},cute?random=${h % 30}`
 }
 
 const cleanBreed = (name) => {
@@ -86,9 +86,9 @@ export default function Breeds() {
 }
 
 const styles = {
-  container: { minHeight: '100vh', background: '#f0f4f8', padding: '2rem', fontFamily: 'sans-serif' },
-  back: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#4a5568', marginBottom: '1rem', padding: 0 },
-  title: { fontSize: '1.8rem', color: '#1a202c', marginBottom: '2rem' },
+  container: { minHeight: '100vh', background: 'linear-gradient(160deg, #2d1b4e 0%, #1a1a3e 50%, #0f172a 100%)', padding: '2rem', fontFamily: 'sans-serif' },
+  back: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#94a3b8', marginBottom: '1rem', padding: 0 },
+  title: { fontSize: '1.8rem', color: 'white', marginBottom: '2rem' },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' },
   card: {
     borderRadius: '0.875rem',

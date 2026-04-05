@@ -10,7 +10,7 @@ export default function Home() {
           <span key={i} style={{
             position: 'absolute',
             fontSize: `${1.2 + (i % 3) * 0.6}rem`,
-            opacity: 0.06 + (i % 4) * 0.02,
+            opacity: 0.12 + (i % 3) * 0.04,
             top: `${(i * 19 + 7) % 95}%`,
             left: `${(i * 23 + 5) % 92}%`,
             transform: `rotate(${(i * 37) % 360}deg)`,
@@ -25,15 +25,15 @@ export default function Home() {
 
         <div style={s.sectionLabel}>HAYVAN TÜRÜ</div>
         <div style={s.animalRow}>
-          <div style={{ ...s.animalCard, borderColor: '#fbbf24' }} onClick={() => navigate('/kedi')}>
+          <div style={{ ...s.animalCard, borderColor: '#fbbf24', background: '#fffbeb' }} onClick={() => navigate('/kedi')}>
             <span style={s.animalEmoji}>🐱</span>
             <span style={{ ...s.animalName, color: '#d97706' }}>Kedi</span>
           </div>
-          <div style={{ ...s.animalCard, borderColor: '#93c5fd' }} onClick={() => navigate('/kopek')}>
+          <div style={{ ...s.animalCard, borderColor: '#93c5fd', background: '#eff6ff' }} onClick={() => navigate('/kopek')}>
             <span style={s.animalEmoji}>🐶</span>
             <span style={{ ...s.animalName, color: '#2563eb' }}>Köpek</span>
           </div>
-          <div style={{ ...s.animalCard, borderColor: '#86efac' }} onClick={() => navigate('/kus')}>
+          <div style={{ ...s.animalCard, borderColor: '#86efac', background: '#f0fdf4' }} onClick={() => navigate('/kus')}>
             <span style={s.animalEmoji}>🦎</span>
             <span style={{ ...s.animalName, color: '#16a34a' }}>Egzotik</span>
           </div>

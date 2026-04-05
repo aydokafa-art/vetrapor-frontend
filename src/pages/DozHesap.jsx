@@ -188,7 +188,7 @@ export default function DozHesap() {
 }
 
 const s = {
-  container: { minHeight: '100vh', background: '#f0f4f8', padding: '2rem', fontFamily: 'sans-serif' },
+  container: { minHeight: '100vh', background: 'linear-gradient(160deg, #2d1a0e 0%, #1a1020 50%, #0f0a28 100%)', padding: '2rem', fontFamily: 'sans-serif' },
   back: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#4a5568', marginBottom: '1rem', padding: 0 },
   title: { fontSize: '1.8rem', color: '#1a202c', marginBottom: '0.25rem' },
   sub: { color: '#718096', fontSize: '0.95rem', marginBottom: '2rem' },

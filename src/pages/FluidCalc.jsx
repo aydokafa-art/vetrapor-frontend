@@ -450,7 +450,7 @@ export default function FluidCalc() {
 }
 
 const s = {
-  container: { minHeight: '100vh', background: '#f0f4f8', padding: '2rem', fontFamily: 'sans-serif' },
+  container: { minHeight: '100vh', background: 'linear-gradient(160deg, #0d2b3a 0%, #0a2040 50%, #071530 100%)', padding: '2rem', fontFamily: 'sans-serif' },
   back: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#4a5568', marginBottom: '1rem', padding: 0 },
   title: { fontSize: '1.8rem', color: '#1a202c', marginBottom: '1.5rem' },
   grid: { display: 'grid', gap: '1.5rem', alignItems: 'start' },

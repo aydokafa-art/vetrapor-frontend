@@ -196,7 +196,7 @@ export default function MakaleAra() {
 const styles = {
   container: {
     minHeight: '100vh',
-    background: '#f0f4f8',
+    background: 'linear-gradient(160deg, #0d2b1a 0%, #0a2030 50%, #071528 100%)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

@@ -74,6 +74,12 @@ export default function Home() {
         </div>
 
         <button style={s.adminBtn} onClick={() => navigate('/admin')}>⚙ Admin Paneli</button>
+
+        {/* quote */}
+        <p style={s.quote}>
+          "İstersem alırım."
+          <span style={s.quoteAuthor}>— Aydın Efe Işık</span>
+        </p>
       </div>
     </div>
   )
@@ -187,5 +193,22 @@ const s = {
     fontSize: '0.85rem',
     padding: '0.6rem 1.25rem',
     width: '100%',
+  },
+  quote: {
+    marginTop: '1.5rem',
+    color: 'rgba(255,255,255,0.75)',
+    fontSize: '1rem',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: 1.8,
+    fontWeight: 500,
+  },
+  quoteAuthor: {
+    display: 'block',
+    fontSize: '.85rem',
+    color: 'rgba(255,255,255,0.5)',
+    letterSpacing: '.05em',
+    fontStyle: 'normal',
+    marginTop: '0.2rem',
   },
 }

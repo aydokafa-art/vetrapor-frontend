@@ -1,250 +1,211 @@
 import { useNavigate } from 'react-router-dom'
-import useMobile from '../useMobile'
-
-const PAW_POSITIONS = [
-  { top: '8%',  left: '5%',  size: '2.2rem', opacity: 0.13, rotate: -20, delay: 0 },
-  { top: '15%', left: '88%', size: '1.7rem', opacity: 0.10, rotate: 30,  delay: 1.2 },
-  { top: '35%', left: '3%',  size: '1.4rem', opacity: 0.09, rotate: 10,  delay: 2.4 },
-  { top: '55%', left: '92%', size: '2rem',   opacity: 0.12, rotate: -15, delay: 0.8 },
-  { top: '70%', left: '8%',  size: '1.6rem', opacity: 0.08, rotate: 25,  delay: 1.8 },
-  { top: '80%', left: '80%', size: '2.4rem', opacity: 0.11, rotate: -35, delay: 3.0 },
-  { top: '90%', left: '45%', size: '1.5rem', opacity: 0.07, rotate: 15,  delay: 2.0 },
-  { top: '25%', left: '50%', size: '1.2rem', opacity: 0.06, rotate: -10, delay: 1.5 },
-  { top: '60%', left: '55%', size: '1.8rem', opacity: 0.08, rotate: 40,  delay: 0.5 },
-  { top: '45%', left: '72%', size: '1.3rem', opacity: 0.07, rotate: -25, delay: 2.8 },
-]
 
 export default function Home() {
   const navigate = useNavigate()
-  const isMobile = useMobile()
 
   return (
-    <div style={styles.container}>
-      {/* Animated background paw prints */}
-      {PAW_POSITIONS.map((p, i) => (
-        <span
-          key={i}
-          style={{
+    <div style={s.container}>
+      <div style={s.pawBg} aria-hidden="true">
+        {Array.from({ length: 18 }).map((_, i) => (
+          <span key={i} style={{
             position: 'absolute',
-            top: p.top,
-            left: p.left,
-            fontSize: p.size,
-            opacity: p.opacity,
-            transform: `rotate(${p.rotate}deg)`,
-            animation: `floatPaw 6s ease-in-out ${p.delay}s infinite alternate`,
-            pointerEvents: 'none',
+            fontSize: `${1.2 + (i % 3) * 0.6}rem`,
+            opacity: 0.12 + (i % 3) * 0.04,
+            top: `${(i * 19 + 7) % 95}%`,
+            left: `${(i * 23 + 5) % 92}%`,
+            transform: `rotate(${(i * 37) % 360}deg)`,
             userSelect: 'none',
-            zIndex: 0,
-          }}
-        >
-          🐾
-        </span>
-      ))}
-
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.logoCircle}>
-          <span style={{ fontSize: '2.6rem' }}>🩺</span>
-        </div>
-        <h1 style={styles.title}>Veteriner Epidemik<br />Rapor Sistemi</h1>
-        <p style={styles.subtitle}>Tanı destekten hesaplayıcılara, tek platformda profesyonel araçlar</p>
-        <div style={styles.divider} />
+            pointerEvents: 'none',
+          }}>🐾</span>
+        ))}
       </div>
+      <div style={s.inner}>
+        <h1 style={s.title}>Veteriner Epidemik Rapor Sistemi</h1>
+        <p style={s.subtitle}>Tanı desteği, epidemik raporlama ve klinik hesaplayıcılar{'\n'}tek çatı altında, hızlı ve güvenilir.</p>
 
-      {/* Species cards */}
-      <p style={styles.sectionLabel}>Hayvan Türü Seçin</p>
-      <div style={{ ...styles.cards, ...(isMobile ? styles.cardsMobile : {}) }}>
-        {[
-          { emoji: '🐱', label: 'Kedi',   color: '#d97706', bg: '#fffbeb', border: '#fde68a', path: '/kedi' },
-          { emoji: '🐶', label: 'Köpek',  color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe', path: '/kopek' },
-          { emoji: '🦎', label: 'Egzotik',color: '#16a34a', bg: '#f0fdf4', border: '#bbf7d0', path: '/kus' },
-        ].map(({ emoji, label, color, bg, border, path }) => (
-          <div
-            key={label}
-            style={{ ...styles.card, background: bg, borderColor: border }}
-            onClick={() => navigate(path)}
-            onMouseEnter={e => {
-              e.currentTarget.style.transform = 'translateY(-6px) scale(1.03)'
-              e.currentTarget.style.boxShadow = `0 16px 40px ${border}`
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0) scale(1)'
-              e.currentTarget.style.boxShadow = styles.card.boxShadow
-            }}
-          >
-            <span style={styles.emoji}>{emoji}</span>
-            <h2 style={{ color, margin: 0, fontSize: '1.2rem', fontWeight: 700 }}>{label}</h2>
+        <div style={s.sectionLabel}>HAYVAN TÜRÜ</div>
+        <div style={s.animalRow}>
+          <div style={{ ...s.animalCard, borderColor: '#fbbf24', background: '#fffbeb' }} onClick={() => navigate('/kedi')}>
+            <span style={s.animalEmoji}>🐱</span>
+            <span style={{ ...s.animalName, color: '#d97706' }}>Kedi</span>
           </div>
-        ))}
+          <div style={{ ...s.animalCard, borderColor: '#93c5fd', background: '#eff6ff' }} onClick={() => navigate('/kopek')}>
+            <span style={s.animalEmoji}>🐶</span>
+            <span style={{ ...s.animalName, color: '#2563eb' }}>Köpek</span>
+          </div>
+          <div style={{ ...s.animalCard, borderColor: '#86efac', background: '#f0fdf4' }} onClick={() => navigate('/kus')}>
+            <span style={s.animalEmoji}>🦎</span>
+            <span style={{ ...s.animalName, color: '#16a34a' }}>Egzotik</span>
+          </div>
+        </div>
+
+        <div style={s.divider} />
+
+        <div style={s.sectionLabel}>ARAÇLAR</div>
+        <div style={s.toolList}>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #4f46e5, #6366f1)' }} onClick={() => navigate('/vaka-bul')}>
+            <div style={s.toolIcon}>🔍</div>
+            <div>
+              <div style={s.toolTitle}>Vaka Bul</div>
+              <div style={s.toolDesc}>Semptoma göre vaka ara</div>
+            </div>
+          </div>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #0891b2, #06b6d4)' }} onClick={() => navigate('/sivi-hesap')}>
+            <div style={s.toolIcon}>💧</div>
+            <div>
+              <div style={s.toolTitle}>Sıvı Hesap</div>
+              <div style={s.toolDesc}>İV sıvı miktarı hesapla</div>
+            </div>
+          </div>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }} onClick={() => navigate('/doz-hesap')}>
+            <div style={s.toolIcon}>💉</div>
+            <div>
+              <div style={s.toolTitle}>Doz Hesap</div>
+              <div style={s.toolDesc}>İlaç dozunu hesapla</div>
+            </div>
+          </div>
+          <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #16a34a, #22c55e)' }} onClick={() => navigate('/makale-ara')}>
+            <div style={s.toolIcon}>📚</div>
+            <div>
+              <div style={s.toolTitle}>Makale Ara</div>
+              <div style={s.toolDesc}>Veteriner literatürü</div>
+            </div>
+          </div>
+        </div>
+
+        <button style={s.adminBtn} onClick={() => navigate('/admin')}>⚙ Admin Paneli</button>
+
+        {/* quote */}
+        <p style={s.quote}>
+          "İstersem alırım."
+          <span style={s.quoteAuthor}>— Aydın Efe Işık</span>
+        </p>
       </div>
-
-      {/* Tool buttons */}
-      <p style={{ ...styles.sectionLabel, marginTop: '2.5rem' }}>Araçlar</p>
-      <div style={{ ...styles.toolGrid, ...(isMobile ? styles.toolGridMobile : {}) }}>
-        {[
-          { icon: '🔍', label: 'Vaka Bul',          path: '/vaka-bul',   color: '#4f46e5', shadow: 'rgba(79,70,229,0.25)' },
-          { icon: '💧', label: 'Sıvı Hesaplayıcı',  path: '/sivi-hesap', color: '#0987a0', shadow: 'rgba(9,135,160,0.25)' },
-          { icon: '💉', label: 'Doz Hesaplayıcı',   path: '/doz-hesap',  color: '#6b46c1', shadow: 'rgba(107,70,193,0.25)' },
-          { icon: '📚', label: 'Makale Ara',         path: '/makale-ara', color: '#16803c', shadow: 'rgba(22,128,60,0.25)' },
-        ].map(({ icon, label, path, color, shadow }) => (
-          <button
-            key={label}
-            style={{ ...styles.toolBtn, background: color, boxShadow: `0 4px 16px ${shadow}` }}
-            onClick={() => navigate(path)}
-            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.12)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            <span style={{ fontSize: '1.4rem' }}>{icon}</span>
-            <span>{label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Admin link */}
-      <button style={styles.adminBtn} onClick={() => navigate('/admin')}>
-        ⚙️ Admin Paneli
-      </button>
-
-      <style>{`
-        @keyframes floatPaw {
-          from { transform: translateY(0px) rotate(var(--r, 0deg)); }
-          to   { transform: translateY(-18px) rotate(var(--r, 0deg)); }
-        }
-      `}</style>
     </div>
   )
 }
 
-const styles = {
+const s = {
   container: {
     minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 40%, #f3e5f5 100%)',
-    fontFamily: "'Segoe UI', system-ui, sans-serif",
-    padding: '3rem 1.5rem',
+    background: 'linear-gradient(180deg, #1e5c3a 0%, #1a4d5e 50%, #1a3d7a 100%)',
     position: 'relative',
     overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: 'sans-serif',
+    padding: '2rem 1rem',
   },
-  header: {
+  pawBg: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+  },
+  inner: {
+    width: '100%',
+    maxWidth: 480,
+    position: 'relative',
+    zIndex: 1,
+  },
+  title: {
+    color: 'white',
+    fontSize: '1.4rem',
+    fontWeight: 700,
+    textAlign: 'center',
+    marginBottom: '0.5rem',
+  },
+  subtitle: {
+    color: '#94a3b8',
+    fontSize: '0.9rem',
+    textAlign: 'center',
+    lineHeight: 1.6,
+    marginBottom: '2rem',
+    whiteSpace: 'pre-line',
+  },
+  sectionLabel: {
+    color: '#64748b',
+    fontSize: '0.72rem',
+    fontWeight: 700,
+    letterSpacing: '0.1em',
+    marginBottom: '0.75rem',
+  },
+  animalRow: {
+    display: 'flex',
+    gap: '0.75rem',
+    marginBottom: '1.5rem',
+  },
+  animalCard: {
+    flex: 1,
+    background: 'rgba(255,255,255,0.07)',
+    border: '2px solid',
+    borderRadius: '1rem',
+    padding: '1.25rem 0.5rem',
+    cursor: 'pointer',
+    textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    zIndex: 1,
-    marginBottom: '0.5rem',
+    gap: '0.4rem',
+    transition: 'transform 0.15s',
   },
-  logoCircle: {
-    width: '80px',
-    height: '80px',
-    borderRadius: '50%',
-    background: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
-    marginBottom: '1.2rem',
-  },
-  title: {
-    fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
-    fontWeight: 800,
-    color: '#1a202c',
-    textAlign: 'center',
-    margin: '0 0 0.75rem',
-    lineHeight: 1.25,
-    letterSpacing: '-0.5px',
-  },
-  subtitle: {
-    color: '#4a5568',
-    fontSize: '1rem',
-    textAlign: 'center',
-    maxWidth: '420px',
-    lineHeight: 1.6,
-    margin: 0,
-  },
+  animalEmoji: { fontSize: '2.2rem' },
+  animalName: { fontWeight: 700, fontSize: '1rem' },
   divider: {
-    width: '60px',
-    height: '4px',
-    borderRadius: '2px',
-    background: 'linear-gradient(90deg, #4f46e5, #16a34a)',
-    margin: '1.5rem auto 0',
+    borderTop: '1px solid rgba(255,255,255,0.08)',
+    marginBottom: '1.5rem',
   },
-  sectionLabel: {
-    fontSize: '0.8rem',
-    fontWeight: 700,
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    color: '#718096',
-    marginBottom: '1rem',
-    marginTop: '2rem',
-    zIndex: 1,
-  },
-  cards: {
+  toolList: {
     display: 'flex',
-    gap: '1.25rem',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    zIndex: 1,
-  },
-  cardsMobile: {
+    flexDirection: 'column',
     gap: '0.75rem',
-  },
-  card: {
-    borderRadius: '1.25rem',
-    padding: '2rem 2.5rem',
-    cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.07)',
-    transition: 'transform 0.22s, box-shadow 0.22s',
-    border: '2px solid transparent',
-    minWidth: '130px',
-    zIndex: 1,
-  },
-  emoji: {
-    fontSize: '3rem',
-    display: 'block',
-    marginBottom: '0.75rem',
-  },
-  toolGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: '0.85rem',
-    width: '100%',
-    maxWidth: '440px',
-    zIndex: 1,
-  },
-  toolGridMobile: {
-    gridTemplateColumns: '1fr',
-    maxWidth: '320px',
+    marginBottom: '1.5rem',
   },
   toolBtn: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem',
-    padding: '0.85rem 1.25rem',
+    gap: '1rem',
+    padding: '1rem 1.25rem',
+    borderRadius: '1rem',
+    cursor: 'pointer',
     border: 'none',
-    borderRadius: '0.85rem',
-    cursor: 'pointer',
     color: 'white',
-    fontSize: '0.95rem',
-    fontWeight: 700,
-    transition: 'filter 0.18s, transform 0.18s',
-    letterSpacing: '0.01em',
   },
-  adminBtn: {
-    marginTop: '2rem',
-    padding: '0.55rem 1.4rem',
-    background: 'rgba(255,255,255,0.6)',
-    border: '1px solid #cbd5e0',
+  toolIcon: {
+    fontSize: '1.6rem',
+    background: 'rgba(255,255,255,0.15)',
     borderRadius: '0.6rem',
+    width: '2.8rem',
+    height: '2.8rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  toolTitle: { fontWeight: 700, fontSize: '1rem', color: 'white' },
+  toolDesc: { fontSize: '0.82rem', color: 'rgba(255,255,255,0.75)', marginTop: '0.1rem' },
+  adminBtn: {
+    background: 'rgba(255,255,255,0.07)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '0.75rem',
+    color: '#94a3b8',
     cursor: 'pointer',
-    color: '#718096',
     fontSize: '0.85rem',
-    fontWeight: 500,
-    backdropFilter: 'blur(6px)',
-    zIndex: 1,
-    transition: 'background 0.18s',
+    padding: '0.6rem 1.25rem',
+    width: '100%',
+  },
+  quote: {
+    marginTop: '1.5rem',
+    color: 'rgba(255,255,255,0.25)',
+    fontSize: '.75rem',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: 1.8,
+  },
+  quoteAuthor: {
+    display: 'block',
+    fontSize: '.7rem',
+    color: 'rgba(255,255,255,0.15)',
+    letterSpacing: '.05em',
   },
 }

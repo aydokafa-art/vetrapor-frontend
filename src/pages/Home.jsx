@@ -196,16 +196,19 @@ const s = {
   },
   quote: {
     marginTop: '1.5rem',
-    color: 'rgba(255,255,255,0.25)',
-    fontSize: '.75rem',
+    color: 'rgba(255,255,255,0.75)',
+    fontSize: '1rem',
     fontStyle: 'italic',
     textAlign: 'center',
     lineHeight: 1.8,
+    fontWeight: 500,
   },
   quoteAuthor: {
     display: 'block',
-    fontSize: '.7rem',
-    color: 'rgba(255,255,255,0.15)',
+    fontSize: '.85rem',
+    color: 'rgba(255,255,255,0.5)',
     letterSpacing: '.05em',
+    fontStyle: 'normal',
+    marginTop: '0.2rem',
   },
 }

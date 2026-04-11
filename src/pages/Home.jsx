@@ -78,6 +78,7 @@ export default function Home() {
         {/* quote */}
         <p style={s.quote}>
           "İstersem alırım."
+          <span style={s.quoteSub}>(Megalomanın tekiyim, egom otantik)</span>
           <span style={s.quoteAuthor}>— Aydın Efe Işık</span>
         </p>
       </div>
@@ -202,6 +203,13 @@ const s = {
     textAlign: 'center',
     lineHeight: 1.8,
     fontWeight: 500,
+  },
+  quoteSub: {
+    display: 'block',
+    fontSize: '.8rem',
+    color: 'rgba(255,255,255,0.45)',
+    fontStyle: 'italic',
+    marginTop: '0.1rem',
   },
   quoteAuthor: {
     display: 'block',

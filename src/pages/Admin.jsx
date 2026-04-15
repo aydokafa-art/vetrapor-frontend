@@ -1,55 +1,24 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'vetrapor2024'
+const API = import.meta.env.VITE_API_URL || ''
 
 export default function Admin() {
   const navigate = useNavigate()
-  const [auth, setAuth] = useState(() => sessionStorage.getItem('admin_auth') === '1')
-  const [passInput, setPassInput] = useState('')
-  const [passError, setPassError] = useState(false)
+  const { user, loading: authLoading, getToken } = useAuth()
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    if (passInput === ADMIN_PASSWORD) {
-      sessionStorage.setItem('admin_auth', '1')
-      setAuth(true)
-    } else {
-      setPassError(true)
-      setPassInput('')
-    }
-  }
-
-  if (!auth) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0f4f8', fontFamily: 'sans-serif' }}>
-      <form onSubmit={handleLogin} style={{ background: 'white', padding: '2.5rem', borderRadius: '0.75rem', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', width: 320, textAlign: 'center' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🔒</div>
-        <h2 style={{ marginBottom: '1.5rem', color: '#1a202c', fontSize: '1.2rem' }}>Admin Girişi</h2>
-        <input
-          type="password"
-          placeholder="Şifre"
-          value={passInput}
-          onChange={e => { setPassInput(e.target.value); setPassError(false) }}
-          style={{ width: '100%', padding: '0.65rem', border: `2px solid ${passError ? '#e53e3e' : '#e2e8f0'}`, borderRadius: '0.5rem', fontSize: '1rem', marginBottom: '0.5rem', boxSizing: 'border-box' }}
-          autoFocus
-        />
-        {passError && <p style={{ color: '#e53e3e', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Hatalı şifre</p>}
-        <button type="submit" style={{ width: '100%', padding: '0.65rem', background: '#4f46e5', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontSize: '1rem', fontWeight: 700 }}>Giriş</button>
-      </form>
-    </div>
-  )
+  // Tüm hook'lar koşulsuz — React kuralı
   const fileRef = useRef()
-  const [mode, setMode] = useState('image') // 'image' | 'text' | 'teams'
+  const [mode, setMode] = useState('image')
   const [text, setText] = useState('')
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
-
-  // Teams state
-  const [teamsStatus, setTeamsStatus] = useState(null) // null | {ok, user} | {ok:false, error}
+  const [teamsStatus, setTeamsStatus] = useState(null)
   const [teams, setTeams] = useState([])
   const [selectedTeam, setSelectedTeam] = useState('')
   const [channels, setChannels] = useState([])
@@ -57,6 +26,24 @@ export default function Admin() {
   const [syncLimit, setSyncLimit] = useState(20)
   const [teamsLoading, setTeamsLoading] = useState(false)
   const [syncResult, setSyncResult] = useState(null)
+
+  useEffect(() => {
+    if (!authLoading && !user) navigate('/giris')
+  }, [authLoading, user])
+
+  if (authLoading || !user) return null
+
+  const canEntry = ['super_admin', 'institution_owner', 'institution_member'].includes(user.role)
+  if (!canEntry) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0f4f8', fontFamily: 'sans-serif' }}>
+      <div style={{ background: 'white', padding: '2.5rem', borderRadius: '0.75rem', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', width: 340, textAlign: 'center' }}>
+        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏥</div>
+        <h2 style={{ color: '#1a202c', fontSize: '1.1rem', marginBottom: '0.75rem' }}>Kurum Üyeliği Gerekli</h2>
+        <p style={{ color: '#718096', fontSize: '0.9rem', marginBottom: '1.25rem' }}>Vaka eklemek için bir kuruma üye olman gerekiyor.</p>
+        <button onClick={() => navigate('/kurumlar')} style={{ background: '#4f46e5', color: 'white', border: 'none', borderRadius: '0.5rem', padding: '0.65rem 1.5rem', cursor: 'pointer', fontWeight: 700 }}>Kurumlar</button>
+      </div>
+    </div>
+  )
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
@@ -91,15 +78,16 @@ export default function Admin() {
 
     try {
       let res
+      const authHeader = { Authorization: `Bearer ${getToken()}` }
       if (mode === 'image' && imageFile) {
         const imageBase64 = await toBase64(imageFile)
-        res = await axios.post('/api/admin/upload-image', {
+        res = await axios.post(`${API}/api/admin/upload-image`, {
           imageBase64,
           mediaType: imageFile.type,
           text,
-        })
+        }, { headers: authHeader })
       } else if (mode === 'text' && text.trim()) {
-        res = await axios.post('/api/admin/upload', { text })
+        res = await axios.post(`${API}/api/admin/upload`, { text }, { headers: authHeader })
       } else {
         setError('Lütfen görsel veya metin ekleyin.')
         setLoading(false)
@@ -123,7 +111,7 @@ export default function Admin() {
   const checkTeamsToken = async () => {
     setTeamsLoading(true)
     try {
-      const res = await axios.get('/api/teams/check')
+      const res = await axios.get(`${API}/api/teams/check`)
       setTeamsStatus(res.data)
       if (res.data.ok) loadTeams()
     } catch (err) {
@@ -135,7 +123,7 @@ export default function Admin() {
 
   const loadTeams = async () => {
     try {
-      const res = await axios.get('/api/teams/teams')
+      const res = await axios.get(`${API}/api/teams/teams`)
       setTeams(res.data)
     } catch (err) {
       setError('Takımlar yüklenemedi: ' + (err.response?.data?.error || err.message))
@@ -147,7 +135,7 @@ export default function Admin() {
     setSelectedChannel('')
     setChannels([])
     try {
-      const res = await axios.get(`/api/teams/teams/${teamId}/channels`)
+      const res = await axios.get(`${API}/api/teams/teams/${teamId}/channels`)
       setChannels(res.data)
     } catch (err) {
       setError('Kanallar yüklenemedi: ' + (err.response?.data?.error || err.message))
@@ -163,7 +151,7 @@ export default function Admin() {
     setSyncResult(null)
     setError('')
     try {
-      const res = await axios.post('/api/teams/sync', {
+      const res = await axios.post(`${API}/api/teams/sync`, {
         teamId: selectedTeam,
         channelId: selectedChannel,
         limit: syncLimit,

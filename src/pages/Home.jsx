@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function Home() {
   const navigate = useNavigate()
+  const { user, logout } = useAuth()
 
   return (
     <div style={s.container}>
@@ -20,8 +22,21 @@ export default function Home() {
         ))}
       </div>
       <div style={s.inner}>
-        <h1 style={s.title}>Veteriner Epidemik Rapor Sistemi</h1>
-        <p style={s.subtitle}>Tanı desteği, epidemik raporlama ve klinik hesaplayıcılar{'\n'}tek çatı altında, hızlı ve güvenilir.</p>
+        {user ? (
+          <div style={s.userBar}>
+            <span style={s.userBadge}>
+              {user.role === 'super_admin' ? '⭐' : '👤'} {user.name}
+            </span>
+            <button style={s.logoutBtn} onClick={logout}>Çıkış</button>
+          </div>
+        ) : (
+          <div style={s.userBar}>
+            <button style={s.loginBtn} onClick={() => navigate('/giris')}>Giriş Yap</button>
+            <button style={s.registerBtn} onClick={() => navigate('/kayit')}>Kayıt Ol</button>
+          </div>
+        )}
+        <h1 style={s.title}>Veteriner Epikriz Rapor Sistemi</h1>
+        <p style={s.subtitle}>Tanı desteği, epikriz raporlama ve klinik hesaplayıcılar{'\n'}tek çatı altında, hızlı ve güvenilir.</p>
 
         <div style={s.sectionLabel}>HAYVAN TÜRÜ</div>
         <div style={s.animalRow}>
@@ -71,6 +86,15 @@ export default function Home() {
               <div style={s.toolDesc}>Veteriner literatürü</div>
             </div>
           </div>
+          {user && (
+            <div style={{ ...s.toolBtn, background: 'linear-gradient(135deg, #7c2d12, #b45309)' }} onClick={() => navigate('/kurumlar')}>
+              <div style={s.toolIcon}>🏥</div>
+              <div>
+                <div style={s.toolTitle}>Kurumlar</div>
+                <div style={s.toolDesc}>{user.role === 'super_admin' ? 'Kurum yönetimi' : 'Kurumum ve üyeler'}</div>
+              </div>
+            </div>
+          )}
         </div>
 
         <button style={s.adminBtn} onClick={() => navigate('/admin')}>⚙ Admin Paneli</button>
@@ -216,5 +240,49 @@ const s = {
     letterSpacing: '.05em',
     fontStyle: 'normal',
     marginTop: '0.2rem',
+  },
+  userBar: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginBottom: '1rem',
+  },
+  userBadge: {
+    color: '#94a3b8',
+    fontSize: '0.85rem',
+    background: 'rgba(255,255,255,0.07)',
+    padding: '0.35rem 0.75rem',
+    borderRadius: '2rem',
+    border: '1px solid rgba(255,255,255,0.12)',
+  },
+  logoutBtn: {
+    background: 'rgba(239,68,68,0.15)',
+    border: '1px solid rgba(239,68,68,0.3)',
+    borderRadius: '0.5rem',
+    color: '#fca5a5',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+    padding: '0.3rem 0.75rem',
+  },
+  loginBtn: {
+    background: 'rgba(255,255,255,0.1)',
+    border: '1px solid rgba(255,255,255,0.2)',
+    borderRadius: '0.5rem',
+    color: 'white',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    padding: '0.4rem 1rem',
+    fontWeight: 600,
+  },
+  registerBtn: {
+    background: 'linear-gradient(135deg, #1e5c3a, #1a4d5e)',
+    border: 'none',
+    borderRadius: '0.5rem',
+    color: 'white',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    padding: '0.4rem 1rem',
+    fontWeight: 600,
   },
 }

@@ -8,12 +8,18 @@ import VakaBul from './pages/VakaBul'
 import FluidCalc from './pages/FluidCalc'
 import MakaleAra from './pages/MakaleAra'
 import DozHesap from './pages/DozHesap'
+import Giris from './pages/Giris'
+import Kayit from './pages/Kayit'
+import Kurumlar from './pages/Kurumlar'
 import './App.css'
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/giris" element={<Giris />} />
+      <Route path="/kayit" element={<Kayit />} />
+      <Route path="/kurumlar" element={<Kurumlar />} />
       <Route path="/vaka-bul" element={<VakaBul />} />
       <Route path="/sivi-hesap" element={<FluidCalc />} />
       <Route path="/doz-hesap" element={<DozHesap />} />

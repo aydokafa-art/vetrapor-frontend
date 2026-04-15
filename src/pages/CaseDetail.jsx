@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -29,28 +30,82 @@ function renderAI(text) {
 export default function CaseDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user, getToken } = useAuth()
   const [c, setC] = useState(null)
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState(false)
   const [aiComment, setAiComment] = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
+  const [publishMsg, setPublishMsg] = useState('')
+  const [comments, setComments] = useState([])
+  const [commentText, setCommentText] = useState('')
+  const [commentLoading, setCommentLoading] = useState(false)
+
+  const authHeaders = () => {
+    const t = getToken()
+    return t ? { Authorization: `Bearer ${t}` } : {}
+  }
 
   useEffect(() => {
-    axios.get(`${API}/api/cases/${id}`)
+    axios.get(`${API}/api/cases/${id}`, { headers: authHeaders() })
       .then(r => setC(r.data))
       .catch(() => setC(null))
       .finally(() => setLoading(false))
+    axios.get(`${API}/api/cases/${id}/comments`, { headers: authHeaders() })
+      .then(r => setComments(r.data))
+      .catch(() => {})
   }, [id])
+
+  const handleAddComment = async () => {
+    if (!commentText.trim()) return
+    setCommentLoading(true)
+    try {
+      const res = await axios.post(`${API}/api/cases/${id}/comments`, { text: commentText }, { headers: authHeaders() })
+      setComments(prev => [...prev, res.data])
+      setCommentText('')
+    } catch (err) {
+      alert(err.response?.data?.error || 'Yorum gönderilemedi')
+    } finally {
+      setCommentLoading(false)
+    }
+  }
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(`${API}/api/cases/${id}/comments/${commentId}`, { headers: authHeaders() })
+      setComments(prev => prev.filter(c => c.id !== commentId))
+    } catch {}
+  }
 
   const generateAi = async () => {
     setAiLoading(true)
     try {
-      const res = await axios.post(`${API}/api/cases/${id}/analyze`)
+      const res = await axios.post(`${API}/api/cases/${id}/analyze`, {}, { headers: authHeaders() })
       setAiComment(res.data.analysis)
     } catch {
       setAiComment('Analiz oluşturulurken bir hata oluştu.')
     } finally {
       setAiLoading(false)
+    }
+  }
+
+  const handlePublishRequest = async () => {
+    try {
+      const res = await axios.post(`${API}/api/cases/${id}/publish-request`, {}, { headers: authHeaders() })
+      setPublishMsg(res.data.message || res.data.error)
+      setC(prev => ({ ...prev, ownership: { ...prev.ownership, publish_requested: 1 } }))
+    } catch (err) {
+      setPublishMsg(err.response?.data?.error || 'Hata')
+    }
+  }
+
+  const handlePublishApprove = async () => {
+    try {
+      const res = await axios.post(`${API}/api/cases/${id}/publish-approve`, {}, { headers: authHeaders() })
+      setPublishMsg(res.data.message || res.data.error)
+      setC(prev => ({ ...prev, ownership: { ...prev.ownership, is_public: 1 } }))
+    } catch (err) {
+      setPublishMsg(err.response?.data?.error || 'Hata')
     }
   }
 
@@ -80,6 +135,23 @@ export default function CaseDetail() {
   return (
     <div style={s.container}>
       <button style={s.back} onClick={() => navigate(-1)}>← Geri</button>
+
+      {/* Kuruma özel / yayın durumu */}
+      {c.ownership && !c.ownership.is_public && (
+        <div style={s.privateBar}>
+          <span>🔒 Bu vaka kuruma özel</span>
+          {publishMsg && <span style={{ marginLeft: '1rem', color: '#16a34a', fontSize: '0.82rem' }}>{publishMsg}</span>}
+          {!c.ownership.publish_requested && (user?.role === 'institution_owner' || user?.role === 'super_admin') && (
+            <button style={s.publishBtn} onClick={handlePublishRequest}>Genel havuza ekle</button>
+          )}
+          {c.ownership.publish_requested && user?.role === 'super_admin' && (
+            <button style={{ ...s.publishBtn, background: '#16a34a' }} onClick={handlePublishApprove}>Onayla — Genel havuza al</button>
+          )}
+          {c.ownership.publish_requested && user?.role !== 'super_admin' && (
+            <span style={{ marginLeft: '0.75rem', fontSize: '0.8rem', color: '#64748b' }}>⏳ Onay bekleniyor</span>
+          )}
+        </div>
+      )}
 
       <div style={s.card}>
         {/* Başlık */}
@@ -173,6 +245,45 @@ export default function CaseDetail() {
           )}
         </div>
       </div>
+
+      {/* YORUMLAR */}
+      <div style={s.commentsSection}>
+        <div style={s.commentsTitle}>💬 Yorumlar {comments.length > 0 && `(${comments.length})`}</div>
+
+        {comments.length === 0 && <div style={s.noComments}>Henüz yorum yok. İlk yorumu sen yap!</div>}
+
+        {comments.map(cm => (
+          <div key={cm.id} style={s.commentCard}>
+            <div style={s.commentHeader}>
+              <span style={s.commentAuthor}>
+                {cm.user_role === 'super_admin' ? '⭐' : '👤'} {cm.user_name}
+              </span>
+              <span style={s.commentDate}>{new Date(cm.created_at).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+              {(user?.id === cm.user_id || user?.role === 'super_admin') && (
+                <button style={s.deleteCommentBtn} onClick={() => handleDeleteComment(cm.id)}>✕</button>
+              )}
+            </div>
+            <p style={s.commentText}>{cm.text}</p>
+          </div>
+        ))}
+
+        {user ? (
+          <div style={s.commentForm}>
+            <textarea
+              style={s.commentInput}
+              placeholder="Klinik görüşünü yaz..."
+              value={commentText}
+              onChange={e => setCommentText(e.target.value)}
+              rows={3}
+            />
+            <button style={{ ...s.commentSubmit, opacity: commentLoading ? 0.6 : 1 }} onClick={handleAddComment} disabled={commentLoading}>
+              {commentLoading ? 'Gönderiliyor...' : 'Yorum Ekle'}
+            </button>
+          </div>
+        ) : (
+          <div style={s.noComments}>Yorum yapmak için <span style={{ color: '#2563eb', cursor: 'pointer' }} onClick={() => navigate('/giris')}>giriş yap</span>.</div>
+        )}
+      </div>
     </div>
   )
 }
@@ -219,4 +330,18 @@ const s = {
   aiDisclaimer: { fontSize: '0.75rem', color: '#7c3aed', background: '#ede9fe', padding: '0.1rem 0.5rem', borderRadius: '1rem', border: '1px solid #c4b5fd' },
   aiCommentText: { margin: '0 0 0.75rem 0', color: '#4c1d95', fontSize: '0.92rem', lineHeight: 1.7, wordBreak: 'break-word' },
   aiClearBtn: { background: 'none', border: '1px solid #c4b5fd', color: '#7c3aed', borderRadius: '0.4rem', padding: '0.25rem 0.75rem', cursor: 'pointer', fontSize: '0.82rem' },
+  privateBar: { background: '#fef9c3', border: '1px solid #fde68a', borderRadius: '0.75rem', padding: '0.6rem 1rem', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', fontSize: '0.88rem', color: '#92400e' },
+  publishBtn: { background: '#7c3aed', border: 'none', borderRadius: '0.4rem', color: 'white', cursor: 'pointer', fontSize: '0.8rem', padding: '0.3rem 0.75rem', fontWeight: 600, marginLeft: 'auto' },
+  commentsSection: { maxWidth: 760, margin: '0 auto 2rem', padding: '0 1rem' },
+  commentsTitle: { color: '#1e293b', fontWeight: 700, fontSize: '1rem', marginBottom: '0.75rem' },
+  noComments: { color: '#94a3b8', fontSize: '0.88rem', fontStyle: 'italic', marginBottom: '0.75rem' },
+  commentCard: { background: 'white', border: '1px solid #e2e8f0', borderRadius: '0.75rem', padding: '0.75rem 1rem', marginBottom: '0.5rem' },
+  commentHeader: { display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' },
+  commentAuthor: { fontWeight: 600, fontSize: '0.85rem', color: '#1e293b' },
+  commentDate: { fontSize: '0.78rem', color: '#94a3b8', marginLeft: 'auto' },
+  deleteCommentBtn: { background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '0.82rem', padding: '0 0.25rem' },
+  commentText: { margin: 0, fontSize: '0.9rem', color: '#374151', lineHeight: 1.6 },
+  commentForm: { marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' },
+  commentInput: { border: '1.5px solid #e2e8f0', borderRadius: '0.75rem', padding: '0.75rem 1rem', fontSize: '0.9rem', resize: 'vertical', fontFamily: 'sans-serif' },
+  commentSubmit: { background: 'linear-gradient(135deg, #1e5c3a, #1a4d5e)', color: 'white', border: 'none', borderRadius: '0.6rem', padding: '0.65rem', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' },
 }

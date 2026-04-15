@@ -33,13 +33,14 @@ export default function Kurumlar() {
       ]);
       const mine = await mineRes.json();
       const all = await allRes.json();
-      setView(mine.role);
+      setView(mine.role || 'none');
       setData(mine);
-      setAllInstitutions(all);
+      setAllInstitutions(Array.isArray(all) ? all : []);
 
       if (user.role === 'super_admin') {
         const pendRes = await fetch(`${API}/api/institutions/pending`, { headers });
-        setPendingInstitutions(await pendRes.json());
+        const pend = await pendRes.json();
+        setPendingInstitutions(Array.isArray(pend) ? pend : []);
       }
     } finally {
       setLoading(false);

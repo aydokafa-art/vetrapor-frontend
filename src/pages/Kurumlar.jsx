@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,17 +14,15 @@ export default function Kurumlar() {
   const [createForm, setCreateForm] = useState({ name: '', description: '' });
   const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(true);
-  const initialized = useRef(false);
 
   const headers = { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'application/json' };
 
   useEffect(() => {
     if (authLoading) return;
     if (!user) { navigate('/giris'); return; }
-    if (initialized.current) return;
-    initialized.current = true;
-    refreshToken().then(() => loadData());
-  }, [authLoading, user]);
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading]);
 
   async function loadData() {
     setLoading(true);

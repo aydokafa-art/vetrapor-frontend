@@ -42,6 +42,10 @@ export default function Kurumlar() {
         const pend = await pendRes.json();
         setPendingInstitutions(Array.isArray(pend) ? pend : []);
       }
+    } catch (e) {
+      console.error('loadData hatası:', e);
+      setView('none');
+      setAllInstitutions([]);
     } finally {
       setLoading(false);
     }

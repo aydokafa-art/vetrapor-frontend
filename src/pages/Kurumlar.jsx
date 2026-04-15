@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,13 +14,15 @@ export default function Kurumlar() {
   const [createForm, setCreateForm] = useState({ name: '', description: '' });
   const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(true);
+  const initialized = useRef(false);
 
   const headers = { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'application/json' };
 
   useEffect(() => {
-    if (authLoading) return; // auth henüz yüklenmedi, bekle
+    if (authLoading) return;
     if (!user) { navigate('/giris'); return; }
-    // Rol değişmiş olabilir (kurum onayı, üyelik onayı) — token yenile
+    if (initialized.current) return;
+    initialized.current = true;
     refreshToken().then(() => loadData());
   }, [authLoading, user]);
 
